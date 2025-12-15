@@ -96,6 +96,7 @@ enableValidation(validationSettings);
 openProfileFormButton.addEventListener("click", () => {
   profileTitleInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
+  openModalWindow(profileFormModalWindow);
   clearValidation(profileForm, validationSettings);
 });
 
