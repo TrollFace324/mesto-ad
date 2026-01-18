@@ -44,7 +44,9 @@ export const createCardElement = (
     likeButton.classList.add("card__like-button_is-active");
   }
 
-  if (data.owner._id !== userId) { 
+  // Удаляем кнопку удаления только если userId определен и пользователь не является владельцем
+  // Если userId не определен, оставляем кнопку (будет обработано при загрузке или на бэкенде)
+  if (userId && data.owner && data.owner._id !== userId) { 
     deleteButton.remove();
   }
 
