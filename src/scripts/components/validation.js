@@ -95,10 +95,8 @@ export const clearValidation = (formElement, validationSettings) => {
     errorClass
   } = validationSettings;
 
-  const submitButton = document.querySelector(submitButtonSelector);
+  const submitButton = formElement.querySelector(submitButtonSelector);
   const inputList = Array.from(formElement.querySelectorAll(inputSelector));
-
-  disableSubmitButton(submitButton, inactiveButtonClass);
 
   inputList.forEach(inputElement => {
     hideInputError(formElement, inputElement, inputErrorClass, errorClass);
