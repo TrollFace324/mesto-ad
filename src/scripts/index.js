@@ -142,11 +142,21 @@ const handleCardFormSubmit = (evt) => {
   cardSubmitButton.textContent = "Создание...";
   cardSubmitButton.disabled = true;
 
-  addCard({
-    name: cardNameInput.value,
-    link: cardLinkInput.value,
-  })
-    .then((cardData) => {
+  // Ensure currentUserId is available before creating the card
+  const ensureUserId = currentUserId ? Promise.resolve(currentUserId) : getUserInfo().then(userData => userData._id);
+
+  Promise.all([
+    addCard({
+      name: cardNameInput.value,
+      link: cardLinkInput.value,
+    }),
+    ensureUserId
+  ])
+    .then(([cardData, userId]) => {
+      // Update currentUserId if it was undefined
+      if (!currentUserId) {
+        currentUserId = userId;
+      }
       placesWrap.prepend(
         createCardElement(cardData, {
           onPreviewPicture: handlePreviewPicture,
@@ -311,24 +321,27 @@ cardForm.addEventListener("submit", handleCardFormSubmit);
 avatarForm.addEventListener("submit", handleAvatarFromSubmit);
 deleteConfirmForm.addEventListener("submit", handleDeleteConfirm);
 
+enableValidation(validationSettings);
+
 openProfileFormButton.addEventListener("click", () => {
   profileTitleInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
-
-  clearValidation(profileForm, validationSettings);
   openModalWindow(profileFormModalWindow);
+  clearValidation(profileForm, validationSettings);
 });
 
 profileAvatar.addEventListener("click", () => {
   avatarForm.reset();
   clearValidation(avatarForm, validationSettings);
   openModalWindow(avatarFormModalWindow);
+  clearValidation(avatarForm, validationSettings);
 });
 
 openCardFormButton.addEventListener("click", () => {
   cardForm.reset();
   clearValidation(cardForm, validationSettings);
   openModalWindow(cardFormModalWindow);
+  clearValidation(cardForm, validationSettings);
 });
 
 // // отображение карточек
